@@ -1,0 +1,282 @@
+-- Created by Vertabelo (http://vertabelo.com)
+-- Last modification date: 2024-06-05 21:44:12.044
+
+-- tables
+-- Table: Cliente
+CREATE TABLE Cliente (
+    Id_cliente int  NOT NULL,
+    Nombres char(30)  NOT NULL,
+    Apellidos char(30)  NOT NULL,
+    CI int  NOT NULL,
+    Direccion char(30)  NOT NULL,
+    CONSTRAINT Cliente_pk PRIMARY KEY (Id_cliente)
+);
+
+-- Table: Componentes
+CREATE TABLE Componentes (
+    Id_Componente int  NOT NULL,
+    Descripcion char(30)  NOT NULL,
+    Tipo_de_componente char(30)  NOT NULL,
+    CONSTRAINT Componentes_pk PRIMARY KEY (Id_Componente)
+);
+
+-- Table: Computadora
+CREATE TABLE Computadora (
+    Id_Computadora int  NOT NULL,
+    Ensamblaje_Id_Ensamblaje int  NOT NULL,
+    Marca char(30)  NOT NULL,
+    CONSTRAINT Computadora_pk PRIMARY KEY (Id_Computadora)
+);
+
+-- Table: Computadora_Prueba
+CREATE TABLE Computadora_Prueba (
+    Id_compu_prueba int  NOT NULL,
+    Prueba_Id_Prueba int  NOT NULL,
+    Computadora_Id_Computadora int  NOT NULL,
+    CONSTRAINT Computadora_Prueba_pk PRIMARY KEY (Id_compu_prueba)
+);
+
+-- Table: Ensamblaje
+CREATE TABLE Ensamblaje (
+    Id_Ensamblaje int  NOT NULL,
+    Fecha_ensamblaje date  NOT NULL,
+    Cantidad_de_piezas int  NOT NULL,
+    Componentes_Id_Componente int  NOT NULL,
+    CONSTRAINT Ensamblaje_pk PRIMARY KEY (Id_Ensamblaje)
+);
+
+-- Table: Factura
+CREATE TABLE Factura (
+    Id_Factura int  NOT NULL,
+    Costo_total int  NOT NULL,
+    Cliente_Id_cliente int  NOT NULL,
+    Venta_componente_Id_Venta_componente int  NOT NULL,
+    Venta_computadora_Id_Venta_computadora int  NOT NULL,
+    CONSTRAINT Factura_pk PRIMARY KEY (Id_Factura)
+);
+
+-- Table: Proveedores
+CREATE TABLE Proveedores (
+    Id_proveedor int  NOT NULL,
+    Nombre char(30)  NOT NULL,
+    CONSTRAINT Proveedores_pk PRIMARY KEY (Id_proveedor)
+);
+
+-- Table: Proveedores_Componentes
+CREATE TABLE Proveedores_Componentes (
+    Id_proveedor_componente int  NOT NULL,
+    Proveedores_Id_proveedor int  NOT NULL,
+    Componentes_Id_Componente int  NOT NULL,
+    CONSTRAINT Proveedores_Componentes_pk PRIMARY KEY (Id_proveedor_componente)
+);
+
+-- Table: Prueba
+CREATE TABLE Prueba (
+    Id_Prueba int  NOT NULL,
+    Evaluacion char(30)  NOT NULL,
+    Fecha date  NOT NULL,
+    Sujeto_prueba_Id_Sujeto_de_prueba int  NOT NULL,
+    CONSTRAINT Prueba_pk PRIMARY KEY (Id_Prueba)
+);
+
+-- Table: Sujeto_prueba
+CREATE TABLE Sujeto_prueba (
+    Id_Sujeto_de_prueba int  NOT NULL,
+    Nombre char(30)  NOT NULL,
+    CONSTRAINT Sujeto prueba_pk PRIMARY KEY (Id_Sujeto_de_prueba)
+);
+
+-- Table: Venta_componente
+CREATE TABLE Venta_componente (
+    Id_Venta_componente int  NOT NULL,
+    Costo_componente int  NOT NULL,
+    Componentes_Id_Componente int  NOT NULL,
+    CONSTRAINT Venta componente_pk PRIMARY KEY (Id_Venta_componente)
+);
+
+-- Table: Venta_computadora
+CREATE TABLE Venta_computadora (
+    Id_Venta_computadora int  NOT NULL,
+    Costo_Computadora int  NOT NULL,
+    Computadora_Id_Computadora int  NOT NULL,
+    CONSTRAINT Venta computadora_pk PRIMARY KEY (Id_Venta_computadora)
+);
+
+-- foreign keys
+-- Reference: Computadora_Ensamblaje (table: Computadora)
+ALTER TABLE Computadora ADD CONSTRAINT Computadora_Ensamblaje
+    FOREIGN KEY (Ensamblaje_Id_Ensamblaje)
+    REFERENCES Ensamblaje (Id_Ensamblaje)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: Computadora_Prueba_Computadora (table: Computadora_Prueba)
+ALTER TABLE Computadora_Prueba ADD CONSTRAINT Computadora_Prueba_Computadora
+    FOREIGN KEY (Computadora_Id_Computadora)
+    REFERENCES Computadora (Id_Computadora)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: Computadora_Prueba_Prueba (table: Computadora_Prueba)
+ALTER TABLE Computadora_Prueba ADD CONSTRAINT Computadora_Prueba_Prueba
+    FOREIGN KEY (Prueba_Id_Prueba)
+    REFERENCES Prueba (Id_Prueba)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: Ensamblaje_Componentes (table: Ensamblaje)
+ALTER TABLE Ensamblaje ADD CONSTRAINT Ensamblaje_Componentes
+    FOREIGN KEY (Componentes_Id_Componente)
+    REFERENCES Componentes (Id_Componente)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: Factura_Cliente (table: Factura)
+ALTER TABLE Factura ADD CONSTRAINT Factura_Cliente
+    FOREIGN KEY (Cliente_Id_cliente)
+    REFERENCES Cliente (Id_cliente)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: Factura_Venta_componente (table: Factura)
+ALTER TABLE Factura ADD CONSTRAINT Factura_Venta_componente
+    FOREIGN KEY (Venta_componente_Id_Venta_componente)
+    REFERENCES Venta_componente (Id_Venta_componente)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: Factura_Venta_computadora (table: Factura)
+ALTER TABLE Factura ADD CONSTRAINT Factura_Venta_computadora
+    FOREIGN KEY (Venta_computadora_Id_Venta_computadora)
+    REFERENCES Venta_computadora (Id_Venta_computadora)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: Proveedores_Componentes_Componentes (table: Proveedores_Componentes)
+ALTER TABLE Proveedores_Componentes ADD CONSTRAINT Proveedores_Componentes_Componentes
+    FOREIGN KEY (Componentes_Id_Componente)
+    REFERENCES Componentes (Id_Componente)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: Proveedores_Componentes_Proveedores (table: Proveedores_Componentes)
+ALTER TABLE Proveedores_Componentes ADD CONSTRAINT Proveedores_Componentes_Proveedores
+    FOREIGN KEY (Proveedores_Id_proveedor)
+    REFERENCES Proveedores (Id_proveedor)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: Prueba_Sujeto_prueba (table: Prueba)
+ALTER TABLE Prueba ADD CONSTRAINT Prueba_Sujeto_prueba
+    FOREIGN KEY (Sujeto_prueba_Id_Sujeto_de_prueba)
+    REFERENCES Sujeto_prueba (Id_Sujeto_de_prueba)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: Venta_componente_Componentes (table: Venta_componente)
+ALTER TABLE Venta_componente ADD CONSTRAINT Venta_componente_Componentes
+    FOREIGN KEY (Componentes_Id_Componente)
+    REFERENCES Componentes (Id_Componente)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: Venta_computadora_Computadora (table: Venta_computadora)
+ALTER TABLE Venta_computadora ADD CONSTRAINT Venta_computadora_Computadora
+    FOREIGN KEY (Computadora_Id_Computadora)
+    REFERENCES Computadora (Id_Computadora)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- sequences
+-- Sequence: Componentes_seq
+CREATE SEQUENCE Componentes_seq
+      INCREMENT BY 1
+      NO MINVALUE
+      NO MAXVALUE
+      START WITH 1
+      NO CYCLE
+;
+
+-- Sequence: Computadora_seq
+CREATE SEQUENCE Computadora_seq
+      INCREMENT BY 1
+      NO MINVALUE
+      NO MAXVALUE
+      START WITH 1
+      NO CYCLE
+;
+
+-- Sequence: Ensamblaje_seq
+CREATE SEQUENCE Ensamblaje_seq
+      INCREMENT BY 1
+      NO MINVALUE
+      NO MAXVALUE
+      START WITH 1
+      NO CYCLE
+;
+
+-- Sequence: Factura_seq
+CREATE SEQUENCE Factura_seq
+      INCREMENT BY 1
+      NO MINVALUE
+      NO MAXVALUE
+      START WITH 1
+      NO CYCLE
+;
+
+-- Sequence: Proveedores_seq
+CREATE SEQUENCE Proveedores_seq
+      INCREMENT BY 1
+      NO MINVALUE
+      NO MAXVALUE
+      START WITH 1
+      NO CYCLE
+;
+
+-- Sequence: Prueba_seq
+CREATE SEQUENCE Prueba_seq
+      INCREMENT BY 1
+      NO MINVALUE
+      NO MAXVALUE
+      START WITH 1
+      NO CYCLE
+;
+
+-- Sequence: Sujeto prueba_seq
+CREATE SEQUENCE Sujeto prueba_seq
+      INCREMENT BY 1
+      NO MINVALUE
+      NO MAXVALUE
+      START WITH 1
+      NO CYCLE
+;
+
+-- Sequence: Venta componente_seq
+CREATE SEQUENCE Venta componente_seq
+      INCREMENT BY 1
+      NO MINVALUE
+      NO MAXVALUE
+      START WITH 1
+      NO CYCLE
+;
+
+-- Sequence: Venta computadora_seq
+CREATE SEQUENCE Venta computadora_seq
+      INCREMENT BY 1
+      NO MINVALUE
+      NO MAXVALUE
+      START WITH 1
+      NO CYCLE
+;

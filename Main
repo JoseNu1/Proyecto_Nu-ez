@@ -1,0 +1,35 @@
+package Proyecto_progra;
+
+import java.sql.SQLException;
+import java.util.List;
+
+public class Main {
+
+	public static void main(String[] args) {
+		ClienteDAO clienteDAO = new ClienteDAO();
+
+        try {
+            // Agregar un nuevo cliente
+            Cliente nuevoCliente = new Cliente(0, "Juan", "Pérez", 12345678, "Calle Falsa 123");
+            clienteDAO.addCliente(nuevoCliente);
+            // Obtener y mostrar todos los clientes
+            List<Cliente> clientes = clienteDAO.getAllClientes();
+            for (Cliente cliente : clientes) {
+                System.out.println(cliente.getIdCliente() + " " + cliente.getNombres() + " " + cliente.getApellidos());
+            }
+            // Actualizar un cliente
+            Cliente clienteActualizado = clientes.get(0);
+            clienteActualizado.setDireccion("Avenida Siempre Viva 742");
+            clienteDAO.updateCliente(clienteActualizado);
+
+            // Eliminar un cliente
+            if (!clientes.isEmpty()) {
+                clienteDAO.deleteCliente(clientes.get(0).getIdCliente());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+	}
+

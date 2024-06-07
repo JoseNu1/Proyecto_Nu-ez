@@ -5,10 +5,10 @@ Una aplicación de escritorio Java para gestionar clientes. Permite agregar, ver
 Requisitos
 Java Development Kit (JDK) 8 o superior
 MySQL
-JDBC Driver para MySQL
+JDBC Driver para Laragon
 Instalación y Configuración
 Clonar el repositorio
-Configurar la Base de Datos: Crear una base de datos MySQL llamada clientes_db y ejecutar el script SQL proporcionado en database.sql.
+Configurar la Base de Datos: Crear una base de datos Laragon llamada progra y ejecutar el script SQL proporcionado en database.sql.
 Configurar la Conexión a la Base de Datos: Asegurarse de que la clase DatabaseConnection esté configurada correctamente con las credenciales de MySQL.
 Ejecutar la Aplicación: Ejecutar la clase ClienteGUI para iniciar la aplicación.
 Uso

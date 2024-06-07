@@ -1,0 +1,67 @@
+package Proyecto_progra;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ClienteDAO {
+    public List<Cliente> getAllClientes() throws SQLException {
+        List<Cliente> clientes = new ArrayList<>();
+        String query = "SELECT * FROM Cliente";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+
+            while (rs.next()) {
+                Cliente cliente = new Cliente(
+                        rs.getInt("Id_cliente"),
+                        rs.getString("Nombres"),
+                        rs.getString("Apellidos"),
+                        rs.getInt("CI"),
+                        rs.getString("Direccion")
+                );
+                clientes.add(cliente);
+            }
+        }
+        return clientes;
+    }
+
+    public void addCliente(Cliente cliente) throws SQLException {
+        String query = "INSERT INTO Cliente (Nombres, Apellidos, CI, Direccion) VALUES (?, ?, ?, ?)";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setString(1, cliente.getNombres());
+            pstmt.setString(2, cliente.getApellidos());
+            pstmt.setInt(3, cliente.getCi());
+            pstmt.setString(4, cliente.getDireccion());
+            pstmt.executeUpdate();
+        }
+    }
+    public void updateCliente(Cliente cliente) throws SQLException {
+        String query = "UPDATE Cliente SET Nombres = ?, Apellidos = ?, CI = ?, Direccion = ? WHERE Id_cliente = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setString(1, cliente.getNombres());
+            pstmt.setString(2, cliente.getApellidos());
+            pstmt.setInt(3, cliente.getCi());
+            pstmt.setString(4, cliente.getDireccion());
+            pstmt.setInt(5, cliente.getIdCliente());
+            pstmt.executeUpdate();
+        }
+    }
+
+    public void deleteCliente(int idCliente) throws SQLException {
+        String query = "DELETE FROM Cliente WHERE Id_cliente = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setInt(1, idCliente);
+            pstmt.executeUpdate();
+        }
+    }
+}

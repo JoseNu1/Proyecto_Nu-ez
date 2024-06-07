@@ -1,0 +1,158 @@
+package Proyecto_progra;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.util.List;
+
+public class ClienteGUI extends JFrame {
+	 private ClienteDAO clienteDAO;
+	    private JTable table;
+	    private DefaultTableModel tableModel;
+	    private JTextField txtIdCliente, txtNombres, txtApellidos, txtCI, txtDireccion;
+
+	    public ClienteGUI() {
+	        clienteDAO = new ClienteDAO();
+
+	        setTitle("Gestión de Clientes");
+	        setSize(800, 600);
+	        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	        setLocationRelativeTo(null);
+
+	        JPanel panel = new JPanel(new BorderLayout());
+
+	        // Table
+	        tableModel = new DefaultTableModel(new String[]{"ID", "Nombres", "Apellidos", "CI", "Dirección"}, 0);
+	        table = new JTable(tableModel);
+	        loadClientes();
+	        panel.add(new JScrollPane(table), BorderLayout.CENTER);
+
+	        // Form
+	        JPanel formPanel = new JPanel(new GridLayout(6, 2));
+	        formPanel.add(new JLabel("ID:"));
+	        txtIdCliente = new JTextField();
+	        txtIdCliente.setEditable(false);
+	        formPanel.add(txtIdCliente);
+
+	        formPanel.add(new JLabel("Nombres:"));
+	        txtNombres = new JTextField();
+	        formPanel.add(txtNombres);
+
+	        formPanel.add(new JLabel("Apellidos:"));
+	        txtApellidos = new JTextField();
+	        formPanel.add(txtApellidos);
+
+	        formPanel.add(new JLabel("CI:"));
+	        txtCI = new JTextField();
+	        formPanel.add(txtCI);
+
+	        formPanel.add(new JLabel("Dirección:"));
+	        txtDireccion = new JTextField();
+	        formPanel.add(txtDireccion);
+
+	        panel.add(formPanel, BorderLayout.NORTH);
+
+	        // Buttons
+	        JPanel buttonPanel = new JPanel();
+	        JButton btnAdd = new JButton("Agregar");
+	        btnAdd.addActionListener(new ActionListener() {
+	            @Override
+	            public void actionPerformed(ActionEvent e) {
+	                addCliente();
+	            }
+	        });
+	        buttonPanel.add(btnAdd);
+
+	        JButton btnUpdate = new JButton("Actualizar");
+	        btnUpdate.addActionListener(new ActionListener() {
+	            @Override
+	            public void actionPerformed(ActionEvent e) {
+	                updateCliente();
+	            }
+	        });
+	        buttonPanel.add(btnUpdate);
+
+	        JButton btnDelete = new JButton("Eliminar");
+	        btnDelete.addActionListener(new ActionListener() {
+	            @Override
+	            public void actionPerformed(ActionEvent e) {
+	                deleteCliente();
+	            }
+	        });
+	        buttonPanel.add(btnDelete);
+
+	        panel.add(buttonPanel, BorderLayout.SOUTH);
+
+	        add(panel);
+	    }
+
+	    private void loadClientes() {
+	        try {
+	            List<Cliente> clientes = clienteDAO.getAllClientes();
+	            tableModel.setRowCount(0); // Clear the table
+	            for (Cliente cliente : clientes) {
+	                tableModel.addRow(new Object[]{cliente.getIdCliente(), cliente.getNombres(), cliente.getApellidos(), cliente.getCi(), cliente.getDireccion()});
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+
+	    private void addCliente() {
+	        String nombres = txtNombres.getText();
+	        String apellidos = txtApellidos.getText();
+	        int ci = Integer.parseInt(txtCI.getText());
+	        String direccion = txtDireccion.getText();
+
+	        Cliente cliente = new Cliente(0, nombres, apellidos, ci, direccion);
+
+	        try {
+	            clienteDAO.addCliente(cliente);
+	            loadClientes();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+
+	    private void updateCliente() {
+	        int idCliente = Integer.parseInt(txtIdCliente.getText());
+	        String nombres = txtNombres.getText();
+	        String apellidos = txtApellidos.getText();
+	        int ci = Integer.parseInt(txtCI.getText());
+	        String direccion = txtDireccion.getText();
+
+	        Cliente cliente = new Cliente(idCliente, nombres, apellidos, ci, direccion);
+
+	        try {
+	            clienteDAO.updateCliente(cliente);
+	            loadClientes();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+
+	    private void deleteCliente() {
+	        int idCliente = Integer.parseInt(txtIdCliente.getText());
+
+	        try {
+	            clienteDAO.deleteCliente(idCliente);
+	            loadClientes();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+
+	    public static void main(String[] args) {
+	        SwingUtilities.invokeLater(new Runnable() {
+	            @Override
+	            public void run() {
+	                ClienteGUI frame = new ClienteGUI();
+	                frame.setVisible(true);
+	            }
+	        });
+	    }
+}
